@@ -1,0 +1,57 @@
+name: fluttershare
+description: A new Flutter project.
+
+# The following defines the version and build number for your application.
+# A version number is three numbers separated by dots, like 1.2.43
+# followed by an optional build number separated by a +.
+# Both the version and the builder number may be overridden in flutter
+# build by specifying --build-name and --build-number, respectively.
+# In Android, build-name is used as versionName while build-number used as versionCode.
+# Read more about Android versioning at https://developer.android.com/studio/publish/versioning
+# In iOS, build-name is used as CFBundleShortVersionString while build-number used as CFBundleVersion.
+# Read more about iOS versioning at
+# https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
+version: 1.0.0+1
+
+environment:
+  sdk: ">=2.1.0 <3.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  cloud_firestore: ^0.9.7+2
+  image_picker: ^0.6.0+2
+  firebase_storage: ^2.1.0+1
+  firebase_auth: ^0.8.3
+  google_sign_in: ^4.0.1+1
+  geolocator: 5.0.1
+  uuid: ^2.0.0
+  image: ^2.0.7
+  animator: 0.1.4
+  cupertino_icons: ^0.1.2
+  path_provider: ^0.5.0+1
+  firebase_messaging: ^4.0.0+1
+  timeago: 2.0.17
+  cached_network_image:
+  flutter_svg:
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+
+# For information on the generic Dart part of this file, see the
+# following page: https://dart.dev/tools/pub/pubspec
+
+# The following section is specific to Flutter.
+flutter:
+  uses-material-design: true
+  fonts:
+    - family: Signatra
+      fonts:
+        - asset: assets/fonts/Signatra.ttf
+  assets:
+    - assets/images/google_signin_button.png
+    - assets/images/upload.svg
+    - assets/images/search.svg
+    - assets/images/activity_feed.svg
+    - assets/images/no_content.svg
