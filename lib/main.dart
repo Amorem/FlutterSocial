@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'pages/home.dart';
+
 void main() {
   runApp(MyApp());
 }
@@ -10,7 +12,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Flutter Social',
       debugShowCheckedModeBanner: false,
-      home: Text("Hello World"),
+      home: Home(),
     );
   }
 }
