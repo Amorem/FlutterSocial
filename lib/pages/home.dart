@@ -1,5 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:google_sign_in/google_sign_in.dart';
+
+final GoogleSignIn googleSignIn = GoogleSignIn();
 
 class Home extends StatefulWidget {
   @override
@@ -7,10 +10,53 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
+  @override
+  void initState() {
+    super.initState();
+
+    // Detect when user SignIn / SignOut
+    googleSignIn.onCurrentUserChanged.listen((GoogleSignInAccount account) {
+      handleSignIn(account);
+    }, onError: (error) {
+      print('Error signin: $error');
+    });
+
+    // Reauthenticate user when app is opened
+    googleSignIn.signInSilently(suppressErrors: false).then((account) {
+      handleSignIn(account);
+    }).catchError((onError) {
+      print('Error when autosignin: $onError');
+    });
+  }
+
+  handleSignIn(GoogleSignInAccount account) {
+    if (account != null) {
+      print('User signed in: $account');
+      setState(() {
+        _isAuth = true;
+      });
+    } else {
+      setState(() {
+        _isAuth = false;
+      });
+    }
+  }
+
   bool _isAuth = false;
 
+  login() {
+    googleSignIn.signIn();
+  }
+
+  logout() {
+    googleSignIn.signOut();
+  }
+
   Widget buildAuthScreen() {
-    return (Text('Authenticated'));
+    return RaisedButton(
+      child: Text("LogOut"),
+      onPressed: logout,
+    );
   }
 
   Scaffold buildUnAuthScreen() {
@@ -37,7 +83,7 @@ class _HomeState extends State<Home> {
                   fontFamily: 'Signatra', fontSize: 90.0, color: Colors.white),
             ),
             GestureDetector(
-              onTap: () {},
+              onTap: login,
               child: Container(
                 width: 260,
                 height: 60,
