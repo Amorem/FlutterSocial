@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "125273985022",
+    "firebase_url": "https://fluttersocial-amorem.firebaseio.com",
+    "project_id": "fluttersocial-amorem",
+    "storage_bucket": "fluttersocial-amorem.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:125273985022:android:7aa1763957371af2",
+        "android_client_info": {
+          "package_name": "dev.amorem.fluttersocial"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "125273985022-d0902lvdrpj90pr3vmb9rafic9ge3eid.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "dev.amorem.fluttersocial",
+            "certificate_hash": "f6fb686f729e875687fa95dcfefbdecd4c124dd6"
+          }
+        },
+        {
+          "client_id": "125273985022-297gsna705oq1m5gfl9tj8h5i87khq62.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDM3IlQp_9Ukbbhw5C9x6Voca0sQKGBQSw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "125273985022-297gsna705oq1m5gfl9tj8h5i87khq62.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "125273985022-v7ne8aqlef009b6q6i8eb7t60fbvhm1u.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "dev.amorem.fluttersocial"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
