@@ -12,6 +12,8 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Flutter Social',
       debugShowCheckedModeBanner: false,
+      theme:
+          ThemeData(primarySwatch: Colors.deepPurple, accentColor: Colors.teal),
       home: Home(),
     );
   }
