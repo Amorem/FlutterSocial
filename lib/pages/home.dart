@@ -1,6 +1,14 @@
+import 'dart:developer';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+
+import 'activity_feed.dart';
+import 'profile.dart';
+import 'timeline.dart';
+import 'upload.dart';
+import 'search.dart';
 
 final GoogleSignIn googleSignIn = GoogleSignIn();
 
@@ -10,9 +18,16 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
+  bool _isAuth = false;
+  PageController _pageController;
+  int pageIndex = 0;
+
   @override
   void initState() {
     super.initState();
+
+    // Init PageController
+    _pageController = PageController();
 
     // Detect when user SignIn / SignOut
     googleSignIn.onCurrentUserChanged.listen((GoogleSignInAccount account) {
@@ -42,8 +57,6 @@ class _HomeState extends State<Home> {
     }
   }
 
-  bool _isAuth = false;
-
   login() {
     googleSignIn.signIn();
   }
@@ -52,10 +65,52 @@ class _HomeState extends State<Home> {
     googleSignIn.signOut();
   }
 
-  Widget buildAuthScreen() {
-    return RaisedButton(
-      child: Text("LogOut"),
-      onPressed: logout,
+  OnPageChanged(int pageIndex) {
+    setState(() {
+      this.pageIndex = pageIndex;
+    });
+  }
+
+  OnTap(int pageIndex) {
+    _pageController.jumpToPage(pageIndex);
+  }
+
+  @override
+  void dispose() {
+    _pageController.dispose();
+    super.dispose();
+  }
+
+  Scaffold buildAuthScreen() {
+    return Scaffold(
+      body: PageView(
+        children: <Widget>[
+          Timeline(),
+          ActivityFeed(),
+          Upload(),
+          Search(),
+          Profile(),
+        ],
+        controller: _pageController,
+        onPageChanged: OnPageChanged,
+        physics: NeverScrollableScrollPhysics(),
+      ),
+      bottomNavigationBar: CupertinoTabBar(
+        currentIndex: pageIndex,
+        onTap: OnTap,
+        activeColor: Theme.of(context).primaryColor,
+        items: [
+          BottomNavigationBarItem(icon: Icon(Icons.whatshot)),
+          BottomNavigationBarItem(icon: Icon(Icons.notifications_active)),
+          BottomNavigationBarItem(
+              icon: Icon(
+            Icons.photo_camera,
+            size: 35.0,
+          )),
+          BottomNavigationBarItem(icon: Icon(Icons.search)),
+          BottomNavigationBarItem(icon: Icon(Icons.account_circle))
+        ],
+      ),
     );
   }
 
