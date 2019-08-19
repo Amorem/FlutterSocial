@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:fluttershare/pages/create_account.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
+import '../models/user.dart';
 import 'activity_feed.dart';
 import 'profile.dart';
 import 'search.dart';
@@ -15,6 +16,7 @@ import 'upload.dart';
 final GoogleSignIn googleSignIn = GoogleSignIn();
 final CollectionReference usersRef = Firestore.instance.collection('users');
 final DateTime timestamp = DateTime.now();
+User currentUser;
 
 class Home extends StatefulWidget {
   @override
@@ -64,7 +66,7 @@ class _HomeState extends State<Home> {
   createUserInFirestore() async {
     // Check if user already exists in users collection DB, according to his ID
     final GoogleSignInAccount user = googleSignIn.currentUser;
-    final DocumentSnapshot doc = await usersRef.document(user.id).get();
+    DocumentSnapshot doc = await usersRef.document(user.id).get();
 
     // If the user doesn't exist, go to CreateAccount page
     if (!doc.exists) {
@@ -81,7 +83,10 @@ class _HomeState extends State<Home> {
         'bio': '',
         'timestamp': timestamp,
       });
+      doc = await usersRef.document(user.id).get();
     }
+    currentUser = User.fromDocument(doc);
+    print(currentUser.username);
   }
 
   login() {
