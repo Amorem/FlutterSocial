@@ -14,12 +14,15 @@ class Timeline extends StatefulWidget {
 class _TimelineState extends State<Timeline> {
   @override
   void initState() {
-    getUserById();
+    getUsers();
     super.initState();
   }
 
   getUsers() async {
-    QuerySnapshot snapshot = await usersRef.getDocuments();
+    final QuerySnapshot snapshot = await usersRef
+        .orderBy('postsCount', descending: true)
+        .limit(2)
+        .getDocuments();
     snapshot.documents.forEach((DocumentSnapshot doc) {
       print(doc.data);
     });
@@ -28,7 +31,7 @@ class _TimelineState extends State<Timeline> {
   getUserById() async {
     final String id = 'cRsyLyqKIGm1F20cWINX';
 
-    DocumentSnapshot doc = await usersRef.document(id).get();
+    final DocumentSnapshot doc = await usersRef.document(id).get();
     print('User $id ${doc.data}');
   }
 
