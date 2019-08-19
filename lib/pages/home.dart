@@ -1,16 +1,20 @@
 import 'dart:developer';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttershare/pages/create_account.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
 import 'activity_feed.dart';
 import 'profile.dart';
+import 'search.dart';
 import 'timeline.dart';
 import 'upload.dart';
-import 'search.dart';
 
 final GoogleSignIn googleSignIn = GoogleSignIn();
+final CollectionReference usersRef = Firestore.instance.collection('users');
+final DateTime timestamp = DateTime.now();
 
 class Home extends StatefulWidget {
   @override
@@ -46,13 +50,36 @@ class _HomeState extends State<Home> {
 
   handleSignIn(GoogleSignInAccount account) {
     if (account != null) {
-      print('User signed in: $account');
+      createUserInFirestore();
       setState(() {
         _isAuth = true;
       });
     } else {
       setState(() {
         _isAuth = false;
+      });
+    }
+  }
+
+  createUserInFirestore() async {
+    // Check if user already exists in users collection DB, according to his ID
+    final GoogleSignInAccount user = googleSignIn.currentUser;
+    final DocumentSnapshot doc = await usersRef.document(user.id).get();
+
+    // If the user doesn't exist, go to CreateAccount page
+    if (!doc.exists) {
+      final String username = await Navigator.push(
+          context, MaterialPageRoute(builder: (context) => CreateAccount()));
+
+      // Get username from createAccount, use it to make new user in usersCollection.
+      usersRef.document(user.id).setData({
+        'id': user.id,
+        'username': username,
+        'photoUrl': user.photoUrl,
+        'email': user.email,
+        'displayName': user.displayName,
+        'bio': '',
+        'timestamp': timestamp,
       });
     }
   }
