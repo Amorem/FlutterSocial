@@ -50,9 +50,9 @@ class _HomeState extends State<Home> {
     });
   }
 
-  handleSignIn(GoogleSignInAccount account) {
+  handleSignIn(GoogleSignInAccount account) async {
     if (account != null) {
-      createUserInFirestore();
+      await createUserInFirestore();
       setState(() {
         _isAuth = true;
       });
@@ -97,13 +97,13 @@ class _HomeState extends State<Home> {
     googleSignIn.signOut();
   }
 
-  OnPageChanged(int pageIndex) {
+  onPageChanged(int pageIndex) {
     setState(() {
       this.pageIndex = pageIndex;
     });
   }
 
-  OnTap(int pageIndex) {
+  onTap(int pageIndex) {
     _pageController.animateToPage(
       pageIndex,
       duration: Duration(milliseconds: 200),
@@ -128,12 +128,12 @@ class _HomeState extends State<Home> {
           Profile(),
         ],
         controller: _pageController,
-        onPageChanged: OnPageChanged,
+        onPageChanged: onPageChanged,
         physics: NeverScrollableScrollPhysics(),
       ),
       bottomNavigationBar: CupertinoTabBar(
         currentIndex: pageIndex,
-        onTap: OnTap,
+        onTap: onTap,
         activeColor: Theme.of(context).primaryColor,
         items: [
           BottomNavigationBarItem(icon: Icon(Icons.whatshot)),
