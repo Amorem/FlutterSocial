@@ -1,9 +1,10 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:fluttershare/models/user.dart';
-import 'package:fluttershare/widgets/header.dart';
-import 'package:fluttershare/widgets/progress.dart';
 
+import '../models/user.dart';
+import '../widgets/header.dart';
+import '../widgets/progress.dart';
+import 'edit_profile.dart';
 import 'home.dart';
 
 class Profile extends StatefulWidget {
@@ -15,6 +16,8 @@ class Profile extends StatefulWidget {
 }
 
 class _ProfileState extends State<Profile> {
+  final String currentUserId = currentUser?.id;
+
   Column buildCountColumn(String label, int count) {
     return Column(
       children: <Widget>[
@@ -38,8 +41,44 @@ class _ProfileState extends State<Profile> {
     );
   }
 
+  editProfile() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => EditProfile(currentUserId: currentUserId),
+      ),
+    );
+  }
+
   buildProfileButton() {
-    return Text('profile button');
+    // Viewing own profile ? Should show EditProfile button
+    bool isProfileOwner = currentUserId == widget.profileId;
+    if (isProfileOwner) {
+      return buildButton(text: 'Edit Profile', function: editProfile);
+    }
+  }
+
+  Container buildButton({String text, Function function}) {
+    return Container(
+        padding: EdgeInsets.only(top: 2.0),
+        child: FlatButton(
+          onPressed: function,
+          child: Container(
+            width: 250.0,
+            height: 27.0,
+            decoration: BoxDecoration(
+              color: Colors.blue,
+              border: Border.all(color: Colors.blue),
+              borderRadius: BorderRadius.circular(5.0),
+            ),
+            alignment: Alignment.center,
+            child: Text(
+              text,
+              style:
+                  TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+            ),
+          ),
+        ));
   }
 
   buildProfileHeader() {
