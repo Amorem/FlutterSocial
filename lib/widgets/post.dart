@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 
-class Post extends StatefulWidget {
+class PostWidget extends StatefulWidget {
   @override
-  _PostState createState() => _PostState();
+  _PostWidgetState createState() => _PostWidgetState();
 }
 
-class _PostState extends State<Post> {
+class _PostWidgetState extends State<PostWidget> {
   @override
   Widget build(BuildContext context) {
     return Text("Post");
