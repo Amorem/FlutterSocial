@@ -6,19 +6,16 @@ import '../models/user.dart';
 import '../pages/home.dart';
 import 'progress.dart';
 
-class PostWidget extends StatefulWidget {
-  @override
-  _PostWidgetState createState() => _PostWidgetState();
-}
+class PostWidget extends StatelessWidget {
+  final Post post;
 
-class _PostWidgetState extends State<PostWidget> {
-  Post post = Post();
+  PostWidget(this.post);
 
   buildPostHeader() {
     return FutureBuilder(
         future: usersRef.document(post.ownerId).get(),
         builder: (context, snapshot) {
-          if (!snapshot.data) {
+          if (!snapshot.hasData) {
             return circularProgress();
           }
           User user = User.fromDocument(snapshot.data);
@@ -84,7 +81,7 @@ class _PostWidgetState extends State<PostWidget> {
             Container(
               margin: EdgeInsets.only(left: 20.0),
               child: Text(
-                '${post.likeCount} likes',
+                '${post.getLikeCount(post.likes)} likes',
                 style:
                     TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
               ),
@@ -113,7 +110,6 @@ class _PostWidgetState extends State<PostWidget> {
 
   @override
   Widget build(BuildContext context) {
-    ;
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: <Widget>[

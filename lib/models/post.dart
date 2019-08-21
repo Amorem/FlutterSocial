@@ -32,13 +32,13 @@ class Post {
     );
   }
 
-  int getLikeCount(dynamic likes) {
-    if (likes == null) {
+  int getLikeCount(likes) {
+    if (likes == {}) {
       return 0;
     }
 
     int count = 0;
-    likes.value.forEach((val) {
+    likes.values.forEach((val) {
       if (val == true) {
         count += 1;
       }
