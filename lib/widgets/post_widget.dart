@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 
 import '../models/post.dart';
 import '../models/user.dart';
+import '../pages/comments.dart';
 import '../pages/home.dart';
 import 'custom_image.dart';
 import 'progress.dart';
@@ -146,7 +147,10 @@ class _PostWidgetState extends State<PostWidget> {
               padding: EdgeInsets.only(right: 20.0),
             ),
             GestureDetector(
-              onTap: () {},
+              onTap: () => showComments(context,
+                  postId: widget.post.postId,
+                  ownerId: widget.post.ownerId,
+                  mediaUrl: widget.post.mediaUrl),
               child: Icon(Icons.chat, size: 28.0, color: Colors.blue[900]),
             ),
           ],
@@ -195,4 +199,12 @@ class _PostWidgetState extends State<PostWidget> {
       ],
     );
   }
+}
+
+showComments(BuildContext context,
+    {String postId, String ownerId, String mediaUrl}) {
+  Navigator.push(context, MaterialPageRoute(builder: (context) {
+    return Comments(
+        postId: postId, postOwnerId: ownerId, postMediaUrl: mediaUrl);
+  }));
 }
