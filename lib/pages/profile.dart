@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttershare/models/post.dart';
+import 'package:fluttershare/widgets/post_tile.dart';
 import '../widgets/post_widget.dart';
 
 import '../models/user.dart';
@@ -22,7 +23,7 @@ class _ProfileState extends State<Profile> {
   final String currentUserId = currentUser?.id;
   bool isLoading = false;
   int postCount = 0;
-  List<PostWidget> posts = [];
+  List<Post> posts = [];
 
   @override
   void initState() {
@@ -43,9 +44,7 @@ class _ProfileState extends State<Profile> {
     setState(() {
       isLoading = false;
       postCount = snapshot.documents.length;
-      posts = snapshot.documents
-          .map((doc) => PostWidget(Post.fromDocument(doc)))
-          .toList();
+      posts = snapshot.documents.map((doc) => Post.fromDocument(doc)).toList();
     });
   }
 
@@ -185,7 +184,26 @@ class _ProfileState extends State<Profile> {
     if (isLoading) {
       return circularProgress();
     }
-    return Column(children: posts);
+    // List<PostWidget> postsW = [];
+    // posts.forEach((post) {
+    //   postsW.add(PostWidget(post));
+    // });
+
+    // return Column(children: postsW);
+
+    List<GridTile> gridTiles = [];
+    posts.forEach((post) {
+      gridTiles.add(GridTile(child: PostTile(post)));
+    });
+    return GridView.count(
+      crossAxisCount: 3,
+      childAspectRatio: 1,
+      mainAxisSpacing: 1.5,
+      crossAxisSpacing: 1.5,
+      shrinkWrap: true,
+      physics: NeverScrollableScrollPhysics(),
+      children: gridTiles,
+    );
   }
 
   @override
