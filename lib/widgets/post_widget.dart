@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import '../models/post.dart';
 import '../models/user.dart';
 import '../pages/home.dart';
+import 'custom_image.dart';
 import 'progress.dart';
 
 class PostWidget extends StatelessWidget {
@@ -47,7 +48,7 @@ class PostWidget extends StatelessWidget {
       child: Stack(
         alignment: Alignment.center,
         children: <Widget>[
-          Image.network(post.mediaUrl),
+          cachedNetworkImage(post.mediaUrl),
         ],
       ),
     );
