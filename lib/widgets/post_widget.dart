@@ -1,3 +1,6 @@
+import 'dart:async';
+
+import 'package:animator/animator.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
@@ -18,17 +21,18 @@ class PostWidget extends StatefulWidget {
 
 class _PostWidgetState extends State<PostWidget> {
   @override
+  String currentUserId = currentUser?.id;
+  int likeCount;
+  bool isLiked;
+  Map likes;
+  bool showHeart = false;
+
   void initState() {
     super.initState();
     likeCount = widget.post.getLikeCount(widget.post.likes);
     likes = widget.post.likes;
     isLiked = (likes[currentUserId] == true);
   }
-
-  final String currentUserId = currentUser?.id;
-  int likeCount;
-  bool isLiked;
-  Map likes;
 
   handleLikePost() {
     bool _isLiked = likes[currentUserId] == true;
@@ -57,6 +61,12 @@ class _PostWidgetState extends State<PostWidget> {
         likeCount += 1;
         isLiked = true;
         likes[currentUserId] = true;
+        showHeart = true;
+      });
+      Timer(Duration(milliseconds: 500), () {
+        setState(() {
+          showHeart = false;
+        });
       });
     }
   }
@@ -98,6 +108,22 @@ class _PostWidgetState extends State<PostWidget> {
         alignment: Alignment.center,
         children: <Widget>[
           cachedNetworkImage(widget.post.mediaUrl),
+          showHeart
+              ? Animator(
+                  duration: Duration(milliseconds: 500),
+                  tween: Tween(begin: 0.2, end: 1.4),
+                  curve: Curves.elasticOut,
+                  cycles: 0,
+                  builder: (anim) => Transform.scale(
+                    scale: anim.value,
+                    child: Icon(
+                      Icons.favorite,
+                      size: 80.0,
+                      color: Colors.red,
+                    ),
+                  ),
+                )
+              : Text('')
         ],
       ),
     );
