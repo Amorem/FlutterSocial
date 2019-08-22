@@ -7,14 +7,63 @@ import '../pages/home.dart';
 import 'custom_image.dart';
 import 'progress.dart';
 
-class PostWidget extends StatelessWidget {
+class PostWidget extends StatefulWidget {
   final Post post;
 
   PostWidget(this.post);
 
+  @override
+  _PostWidgetState createState() => _PostWidgetState();
+}
+
+class _PostWidgetState extends State<PostWidget> {
+  @override
+  void initState() {
+    super.initState();
+    likeCount = widget.post.getLikeCount(widget.post.likes);
+    likes = widget.post.likes;
+    isLiked = (likes[currentUserId] == true);
+  }
+
+  final String currentUserId = currentUser?.id;
+  int likeCount;
+  bool isLiked;
+  Map likes;
+
+  handleLikePost() {
+    bool _isLiked = likes[currentUserId] == true;
+    if (_isLiked) {
+      postsRef
+          .document(widget.post.ownerId)
+          .collection('userPosts')
+          .document(widget.post.postId)
+          .updateData({
+        'likes.$currentUserId': false,
+      });
+      setState(() {
+        likeCount -= 1;
+        isLiked = false;
+        likes[currentUserId] = false;
+      });
+    } else if (!isLiked) {
+      postsRef
+          .document(widget.post.ownerId)
+          .collection('userPosts')
+          .document(widget.post.postId)
+          .updateData({
+        'likes.$currentUserId': true,
+      });
+      setState(() {
+        likeCount += 1;
+        isLiked = true;
+        likes[currentUserId] = true;
+      });
+    }
+  }
+
   buildPostHeader() {
     return FutureBuilder(
-        future: usersRef.document(post.ownerId).get(),
+        future: usersRef.document(widget.post.ownerId).get(),
         builder: (context, snapshot) {
           if (!snapshot.hasData) {
             return circularProgress();
@@ -33,7 +82,7 @@ class PostWidget extends StatelessWidget {
                     TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
               ),
             ),
-            subtitle: Text(post.location),
+            subtitle: Text(widget.post.location),
             trailing: IconButton(
               onPressed: () {},
               icon: Icon(Icons.more_vert),
@@ -44,11 +93,11 @@ class PostWidget extends StatelessWidget {
 
   buildPostImage() {
     return GestureDetector(
-      onDoubleTap: () {},
+      onDoubleTap: handleLikePost,
       child: Stack(
         alignment: Alignment.center,
         children: <Widget>[
-          cachedNetworkImage(post.mediaUrl),
+          cachedNetworkImage(widget.post.mediaUrl),
         ],
       ),
     );
@@ -63,9 +112,9 @@ class PostWidget extends StatelessWidget {
               padding: EdgeInsets.only(top: 40.0, left: 20.0),
             ),
             GestureDetector(
-              onTap: () {},
-              child:
-                  Icon(Icons.favorite_border, size: 28.0, color: Colors.pink),
+              onTap: handleLikePost,
+              child: Icon(isLiked ? Icons.favorite : Icons.favorite_border,
+                  size: 28.0, color: Colors.pink),
             ),
             Padding(
               padding: EdgeInsets.only(right: 20.0),
@@ -82,7 +131,7 @@ class PostWidget extends StatelessWidget {
             Container(
               margin: EdgeInsets.only(left: 20.0),
               child: Text(
-                '${post.getLikeCount(post.likes)} likes',
+                '$likeCount likes',
                 style:
                     TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
               ),
@@ -95,13 +144,13 @@ class PostWidget extends StatelessWidget {
             Container(
               margin: EdgeInsets.only(left: 20.0),
               child: Text(
-                '${post.username}',
+                '${widget.post.username}',
                 style:
                     TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
               ),
             ),
             Expanded(
-              child: Text(post.description),
+              child: Text(widget.post.description),
             )
           ],
         )
