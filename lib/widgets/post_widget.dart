@@ -50,6 +50,7 @@ class _PostWidgetState extends State<PostWidget> {
         isLiked = false;
         likes[currentUserId] = false;
       });
+      removeLikeToActivityFeed();
     } else if (!isLiked) {
       postsRef
           .document(widget.post.ownerId)
@@ -58,6 +59,7 @@ class _PostWidgetState extends State<PostWidget> {
           .updateData({
         'likes.$currentUserId': true,
       });
+      addLikeToActivityFeed();
       setState(() {
         likeCount += 1;
         isLiked = true;
@@ -68,6 +70,41 @@ class _PostWidgetState extends State<PostWidget> {
         setState(() {
           showHeart = false;
         });
+      });
+    }
+  }
+
+  addLikeToActivityFeed() {
+    bool isNotPostOwner = (currentUserId != widget.post.ownerId);
+    if (isNotPostOwner) {
+      activityFeedRef
+          .document(widget.post.ownerId)
+          .collection('feedItems')
+          .document(widget.post.postId)
+          .setData({
+        "type": 'like',
+        "username": currentUser.username,
+        "userId": currentUser.id,
+        "userProfileImg": currentUser.photoUrl,
+        "postId": widget.post.postId,
+        "mediaUrl": widget.post.mediaUrl,
+        "timestamp": timestamp
+      });
+    }
+  }
+
+  removeLikeToActivityFeed() {
+    bool isNotPostOwner = (currentUserId != widget.post.ownerId);
+    if (isNotPostOwner) {
+      activityFeedRef
+          .document(widget.post.ownerId)
+          .collection('feedItems')
+          .document(widget.post.postId)
+          .get()
+          .then((doc) {
+        if (doc.exists) {
+          doc.reference.delete();
+        }
       });
     }
   }
