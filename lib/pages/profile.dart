@@ -2,8 +2,8 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:fluttershare/models/post.dart';
-import 'package:fluttershare/widgets/post_tile.dart';
+import '../models/post.dart';
+import '../widgets/post_tile.dart';
 import '../widgets/post_widget.dart';
 
 import '../models/user.dart';
@@ -95,9 +95,76 @@ class _ProfileState extends State<Profile> {
     }
   }
 
-  handleUnfollowUser() {}
+  handleUnfollowUser() {
+    setState(() {
+      isFollowing = false;
+    });
 
-  handleFollowUser() {}
+    followersRef
+        .document(widget.profileId)
+        .collection('followers')
+        .document(currentUserId)
+        .get()
+        .then((doc) {
+      if (doc.exists) {
+        doc.reference.delete();
+      }
+    });
+
+    followingRef
+        .document(currentUserId)
+        .collection('userFollowing')
+        .document(currentUserId)
+        .get()
+        .then((doc) {
+      if (doc.exists) {
+        doc.reference.delete();
+      }
+    });
+
+    activityFeedRef
+        .document(widget.profileId)
+        .collection('feedItems')
+        .document(currentUserId)
+        .get()
+        .then((doc) {
+      if (doc.exists) {
+        doc.reference.delete();
+      }
+    });
+  }
+
+  handleFollowUser() {
+    setState(() {
+      isFollowing = true;
+    });
+
+    // Make AUTH user follower of ANOTHER user (update THEIR followers collections)
+    followersRef
+        .document(widget.profileId)
+        .collection('followers')
+        .document(currentUserId)
+        .setData({});
+    followingRef
+        .document(currentUserId)
+        .collection('userFollowing')
+        .document(currentUserId)
+        .setData({});
+
+    // Add activity feed item to notify about new follower
+    activityFeedRef
+        .document(widget.profileId)
+        .collection('feedItems')
+        .document(currentUserId)
+        .setData({
+      'type': 'follow',
+      'ownerId': widget.profileId,
+      'username': currentUser.username,
+      'userId': currentUserId,
+      'userProfileImg': currentUser.photoUrl,
+      'timestamp': timestamp
+    });
+  }
 
   Container buildButton({String text, Function function}) {
     return Container(

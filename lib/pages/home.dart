@@ -22,6 +22,10 @@ final CollectionReference commentsRef =
     Firestore.instance.collection('comments');
 final CollectionReference activityFeedRef =
     Firestore.instance.collection('feed');
+final CollectionReference followersRef =
+    Firestore.instance.collection('followers');
+final CollectionReference followingRef =
+    Firestore.instance.collection('following');
 final DateTime timestamp = DateTime.now();
 User currentUser;
 
