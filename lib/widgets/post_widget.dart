@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:animator/animator.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttershare/pages/activity_feed.dart';
 
 import '../models/post.dart';
 import '../models/user.dart';
@@ -123,7 +124,7 @@ class _PostWidgetState extends State<PostWidget> {
               backgroundColor: Colors.grey,
             ),
             title: GestureDetector(
-              onTap: () {},
+              onTap: () => showProfile(context, profileId: widget.post.ownerId),
               child: Text(
                 user.username,
                 style:
