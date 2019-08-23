@@ -138,7 +138,7 @@ class _ProfileState extends State<Profile> {
 
     followersRef
         .document(widget.profileId)
-        .collection('followers')
+        .collection('userFollowers')
         .document(currentUserId)
         .get()
         .then((doc) {
@@ -178,7 +178,7 @@ class _ProfileState extends State<Profile> {
     // Make AUTH user follower of ANOTHER user (update THEIR followers collections)
     followersRef
         .document(widget.profileId)
-        .collection('followers')
+        .collection('userFollowers')
         .document(currentUserId)
         .setData({});
     followingRef
