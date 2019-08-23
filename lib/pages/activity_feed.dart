@@ -43,6 +43,7 @@ class _ActivityFeedState extends State<ActivityFeed> {
           },
         ),
       ),
+      backgroundColor: Colors.teal,
     );
   }
 }

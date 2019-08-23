@@ -7,3 +7,4 @@ Using Flutter and FireStore
 ![upload](./screenshots/upload.png)
 ![search](./screenshots/search.png)
 ![postfields](./screenshots/postfields.png)
+![feed](./screenshots/feed.png)
