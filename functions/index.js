@@ -37,3 +37,25 @@ exports.onCreateFollower = functions.firestore
       }
     });
   });
+
+exports.onDeleteFollower = functions.firestore
+  .document("/followers/{userId}/userFollowers/{followerId}")
+  .onDelete(async (snapshot, context) => {
+    console.log("Follower Deleted", snapshot.id);
+    const userId = context.params.userId;
+    const followerId = context.params.followerId;
+
+    const timelinePostsRef = admin
+      .firestore()
+      .collection("timeline")
+      .doc(followerId)
+      .collection("timelinePosts")
+      .where("ownerId", "==", userId);
+
+    const querySnapshot = await timelinePostsRef.get();
+    querySnapshot.forEach(doc => {
+      if (doc.exists) {
+        doc.ref.delete();
+      }
+    });
+  });

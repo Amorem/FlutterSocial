@@ -63,7 +63,7 @@ class _ProfileState extends State<Profile> {
   checkIfFollowing() async {
     DocumentSnapshot doc = await followersRef
         .document(widget.profileId)
-        .collection('followers')
+        .collection('userFollowers')
         .document(currentUserId)
         .get();
     setState(() {
