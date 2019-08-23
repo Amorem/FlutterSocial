@@ -26,6 +26,7 @@ class _ProfileState extends State<Profile> {
   int postCount = 0;
   List<Post> posts = [];
   String postOrientation = "grid";
+  bool isFollowing = false;
 
   @override
   void initState() {
@@ -87,10 +88,16 @@ class _ProfileState extends State<Profile> {
     bool isProfileOwner = currentUserId == widget.profileId;
     if (isProfileOwner) {
       return buildButton(text: 'Edit Profile', function: editProfile);
-    } else {
-      return Text('');
+    } else if (isFollowing) {
+      return buildButton(text: "Unfollow", function: handleUnfollowUser);
+    } else if (!isFollowing) {
+      return buildButton(text: "Follow", function: handleFollowUser);
     }
   }
+
+  handleUnfollowUser() {}
+
+  handleFollowUser() {}
 
   Container buildButton({String text, Function function}) {
     return Container(
@@ -101,15 +108,17 @@ class _ProfileState extends State<Profile> {
             width: 250.0,
             height: 27.0,
             decoration: BoxDecoration(
-              color: Colors.blue,
-              border: Border.all(color: Colors.blue),
+              color: isFollowing ? Colors.white : Colors.blue,
+              border:
+                  Border.all(color: isFollowing ? Colors.grey : Colors.blue),
               borderRadius: BorderRadius.circular(5.0),
             ),
             alignment: Alignment.center,
             child: Text(
               text,
-              style:
-                  TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+              style: TextStyle(
+                  color: isFollowing ? Colors.black : Colors.white,
+                  fontWeight: FontWeight.bold),
             ),
           ),
         ));
