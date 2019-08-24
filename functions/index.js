@@ -195,7 +195,8 @@ exports.onCreateActivityFeedItem = functions.firestore
       };
 
       // send message with admin.messaging
-      admin.messaging
+      admin
+        .messaging()
         .send(message)
         .then(response => {
           console.log("Successsfully sent message", response);
