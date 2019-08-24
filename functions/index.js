@@ -146,3 +146,60 @@ exports.onDeletePost = functions.firestore
         });
     });
   });
+
+exports.onCreateActivityFeedItem = functions.firestore
+  .document("/feed/{userId}/feedItems/{activityFeedItem}")
+  .onCreate(async (snapshot, context) => {
+    console.log("Activity Feed Item created", snapshot.data());
+
+    // get user connected to the feed
+    const userId = context.params.userId;
+    const userRef = admin.firestore().doc(`users/${userId}`);
+    const doc = await userRef.get();
+
+    // check if they have a notification token
+    const androidNotificationToken = doc.data().androidNotificationToken;
+    if (androidNotificationToken) {
+      // send notification
+      sendNotification(androidNotificationToken, snapshot.data());
+    } else {
+      console.log("No token for user, cannot send notification");
+    }
+
+    function sendNotification(androidNotificationToken, activityFeedItem) {
+      let body;
+      switch (activityFeedItem.type) {
+        case "comment":
+          body = `${activityFeedItem.username} replied: ${activityFeedItem.commentData}`;
+          break;
+
+        case "like":
+          body = `${activityFeedItem.username} liked your post`;
+          break;
+
+        case "follow":
+          body = `${activityFeedItem.username} started following you`;
+          break;
+
+        default:
+          break;
+      }
+
+      // create message for pusn notification
+      const message = {
+        notification: {
+          body
+        },
+        token: androidNotificationToken,
+        data: { recipient: userId }
+      };
+
+      // send message with admin.messaging
+      admin.messaging
+        .send(message)
+        .then(response => {
+          console.log("Successsfully sent message", response);
+        })
+        .catch(error => console.log("Error sending notification", error));
+    }
+  });
