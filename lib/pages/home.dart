@@ -15,6 +15,9 @@ import 'timeline.dart';
 import 'upload.dart';
 
 final GoogleSignIn googleSignIn = GoogleSignIn();
+final DateTime timestamp = DateTime.now();
+User currentUser;
+
 final StorageReference storageRef = FirebaseStorage.instance.ref();
 final CollectionReference usersRef = Firestore.instance.collection('users');
 final CollectionReference postsRef = Firestore.instance.collection('posts');
@@ -26,8 +29,8 @@ final CollectionReference followersRef =
     Firestore.instance.collection('followers');
 final CollectionReference followingRef =
     Firestore.instance.collection('following');
-final DateTime timestamp = DateTime.now();
-User currentUser;
+final CollectionReference timelineRef =
+    Firestore.instance.collection('timeline');
 
 class Home extends StatefulWidget {
   @override
@@ -131,7 +134,7 @@ class _HomeState extends State<Home> {
     return Scaffold(
       body: PageView(
         children: <Widget>[
-          Timeline(),
+          Timeline(currentUser: currentUser),
           ActivityFeed(),
           Upload(currentUser: currentUser),
           Search(),
