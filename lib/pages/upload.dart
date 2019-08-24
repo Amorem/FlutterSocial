@@ -22,7 +22,8 @@ class Upload extends StatefulWidget {
   _UploadState createState() => _UploadState();
 }
 
-class _UploadState extends State<Upload> {
+class _UploadState extends State<Upload>
+    with AutomaticKeepAliveClientMixin<Upload> {
   File file;
   bool isUploading = false;
   String postId = Uuid().v4();
@@ -273,8 +274,11 @@ class _UploadState extends State<Upload> {
     locationControler.text = formatedAdress;
   }
 
+  get wantKeepAlive => true;
+
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     return file == null ? buildSplashScreen() : buildUploadForm();
   }
 }
